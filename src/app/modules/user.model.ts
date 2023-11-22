@@ -1,5 +1,7 @@
+import bcrypt from 'bcrypt';
 import { Schema, model, Error } from "mongoose";
 import { TUser, TFullName, TAddress, TOrder, UserModel } from './user.interface';
+import config from '../config';
 
 // Define the schema for Fullname model
 const fullNameSchema = new Schema<TFullName>({
@@ -76,6 +78,20 @@ const UserSchema = new Schema<TUser>({
     },
     orders: [OrdersSchema],
 });
+
+
+// brcrypting the password field
+UserSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this; // doc
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+
 
 // Definingg a static method
 UserSchema.statics.isUserExists = async (id: number, username: string ) => {
