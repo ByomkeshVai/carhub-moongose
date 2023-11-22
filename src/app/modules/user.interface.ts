@@ -30,6 +30,8 @@ export type TUser = {
   orders?: TOrder[];
 };
 
+
+
 export interface UserModel extends Model<TUser>{
     // eslint-disable-next-line no-unused-vars
     isUserExists(id: number, username: string) : Promise<TUser | null>

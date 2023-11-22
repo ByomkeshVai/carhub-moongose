@@ -26,6 +26,7 @@ const AddressSchema = new Schema<TAddress>({
         required: [true, "Country is required"] },
 });
 
+
 // Define the schema for the order model
 const OrdersSchema = new Schema<TOrder>({
     productName: {
@@ -36,23 +37,25 @@ const OrdersSchema = new Schema<TOrder>({
         required: [true, "Price is required"], min: 0 },
     quantity: {
         type: Number, 
-        required: [true, "Quantity is required"], min: 1 },
+        required: [true, "Quantity is required"], min: 1
+    },
 });
+
 
 // Define the schema for the user model
 const UserSchema = new Schema<TUser>({
     userId: {
         type: Number,
-        required: [true, "User ID is required"]
+        required: [true, "User ID is required"],
+        unique: true,
     },
     username: {
         type: String,
-        required: [true, "Username is required"], unique: true
+        required: [true, "Username is required"], unique: true,
     },
     password: {
         type: String,
         required: [true, "Password is required"],
-        maxlength: [20, 'Password can not be more than 20 characters'],
     },
     fullName: {
         type: fullNameSchema,
@@ -60,7 +63,7 @@ const UserSchema = new Schema<TUser>({
     },
     age: {
         type: Number,
-        required: [true, "Age is required"], min: 0
+        required: [true, "Age is required"], min: 0,
     },
     email: {
         type: String, 
@@ -76,11 +79,13 @@ const UserSchema = new Schema<TUser>({
         type: AddressSchema,
         required: [true, "Address is required"],
     },
-    orders: [OrdersSchema],
+    orders: [OrdersSchema]
 });
 
 
-// brcrypting the password field
+
+
+// bcrypting the password field
 UserSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this; // doc
@@ -102,5 +107,7 @@ UserSchema.statics.isUserExists = async (id: number, username: string ) => {
         throw new Error(`Error while checking if user exists: ${error.message}`);
     }
 };
+
+
 
 export const User = model<TUser, UserModel>('User', UserSchema);
