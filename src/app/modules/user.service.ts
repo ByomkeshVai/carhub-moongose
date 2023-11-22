@@ -9,17 +9,36 @@ const createUserDB = async (userData : TUser) => {
     return result;
 }
 
-// const createUserDB = async (userData: TUser[]) => {
-//   for (const user of userData) {
-//     const userExists = await User.isUserExists(user.userId, user.username);
-//     if (userExists) {
-//       throw new Error("User Already Exists on Database");
-//     }
-//   }
-//   const result = await User.create(userData);
-//   return result;
-// };
+const getAllUserFromDB = async () => {
+  const result = await User.find();
+  return result;
+};
+
+const getSingleUserFromDB = async (id : number) => {
+  if (await User.isSingleUser(id)) {
+        throw new Error("User not found");
+    }
+
+    const result = await User.findOne({userId : id});
+    return result;
+
+};
+
+
+const deleteUserFromDB = async (id: number) => {
+     if ((await User.isSingleUserDelete(id))) {
+    throw new Error("User not found");
+  }
+    const result = await User.deleteOne({ userId: id });
+    if (result.deletedCount === 0) {
+        throw new Error('User not found');
+    }
+    return result;
+}
 
 export const Userservice = {
     createUserDB,
+    getAllUserFromDB,
+    getSingleUserFromDB,
+    deleteUserFromDB
 }

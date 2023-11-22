@@ -23,6 +23,80 @@ const createUser = async (req: Request, res: Response) => {
 }
 
 
+const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const result = await Userservice.getAllUserFromDB();
+
+    res.status(200).json({
+      success: true,
+      message: 'Users fetched successfully!',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: err,
+    });
+  }
+};
+
+const getSingleUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const userIdNumber = parseInt(userId, 10);
+        const result = await Userservice.getSingleUserFromDB(userIdNumber);
+
+        res.status(200).json({
+            success: true,
+            message: 'User fetched successfully!',
+            data: result,
+        });
+      
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: 'User not found',
+            error: err,
+        });
+    }
+}
+
+
+
+
+const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const userIdNumber = parseInt(userId, 10);
+        await Userservice.deleteUserFromDB(userIdNumber);
+
+        res.status(200).json({
+            success: true,
+            message: 'User deleted successfully!',
+            data: null,
+        });
+    } catch (err: any) {
+        if (err.message === 'User not found') {
+            res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: null,
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: 'Something went wrong',
+                error: err,
+            });
+        }
+    }
+};
+
+
 export const UserController = {
-  createUser,
+    createUser,
+    getAllUsers,
+    getSingleUser,
+    deleteUser,
 };

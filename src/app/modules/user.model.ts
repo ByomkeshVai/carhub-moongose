@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Schema, model, Error } from "mongoose";
+import { Schema, model } from "mongoose";
 import { TUser, TFullName, TAddress, TOrder, UserModel } from './user.interface';
 import config from '../config';
 
@@ -43,7 +43,7 @@ const OrdersSchema = new Schema<TOrder>({
 
 
 // Define the schema for the user model
-const UserSchema = new Schema<TUser>({
+const UserSchema = new Schema<TUser, UserModel>({
     userId: {
         type: Number,
         required: [true, "User ID is required"],
@@ -96,17 +96,31 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+UserSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
 
 
-// Definingg a static method
-UserSchema.statics.isUserExists = async (id: number, username: string ) => {
-    try {
-        const exixtstingUser = await User.findOne({ $or: [{ userId: id }, { username }] });
-        return exixtstingUser;
-    } catch (error: any) {
-        throw new Error(`Error while checking if user exists: ${error.message}`);
-    }
+
+// Static method to check if a user exists by ID or username
+UserSchema.statics.isUserExists = async (id: number, username: string) => {
+  const existingUser = await User.findOne({ $or: [{ id }, { username }] });
+  return existingUser;
 };
+
+// Static method to find a single user by ID
+UserSchema.statics.isSingleUser = async (id: number) => {
+  const singleUser = await User.findOne({ id });
+  return singleUser;
+};
+
+// Static method to delete a user by ID
+UserSchema.statics.isSingleUserDelete = async (id: number) => {
+  const deletedUser = await User.findOne({ id });
+  return deletedUser;
+};
+
 
 
 
