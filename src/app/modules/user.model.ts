@@ -61,10 +61,17 @@ const UserSchema = new Schema<TUser, UserModel>({
         type: fullNameSchema,
         required: [true, "Full Name is required"]
     },
-    age: {
-        type: Number,
-        required: [true, "Age is required"], min: 0,
+   age: {
+    type: Number,
+    validate: {
+      validator: function (value : any) {
+        return typeof value === 'number' && !isNaN(value);
+      },
+      message: 'Age should be a valid number',
     },
+    required: [true, 'Age is required'],
+    min: 0,
+  },
     email: {
         type: String, 
         required: [true, "Email is required"] },
