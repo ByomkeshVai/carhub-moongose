@@ -103,14 +103,24 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-// UserSchema.post('save', function (doc, next) {
-//   doc.password = '';
-//   next();
-// });
-
 UserSchema.set('toJSON', {
-  transform: function (doc, ret) {
+  virtuals: true,
+  transform: (doc, ret) => {
     delete ret.password;
+    delete ret._id; 
+    delete ret.id;
+    delete ret.__v;
+
+    const removeIds = (obj: Record<string, any>) => {
+      if (obj instanceof Array) {
+        obj.forEach(removeIds);
+      } else if (obj && typeof obj === 'object') {
+        delete obj._id;
+        Object.keys(obj).forEach(key => removeIds(obj[key]));
+      }
+    };
+
+    removeIds(ret);
     return ret;
   },
 });

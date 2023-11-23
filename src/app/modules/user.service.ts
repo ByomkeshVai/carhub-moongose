@@ -100,9 +100,7 @@ const getOrderFromSingleDB = async (userId: number) => {
     }
     const orders = user.orders || [];
 
-    return {
-      data: orders,
-    };
+    return orders
   } catch (error: any) {
     throw new Error(error.message || "Failed to fetch order");
   }

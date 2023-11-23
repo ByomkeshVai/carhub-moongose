@@ -123,8 +123,12 @@ const getSingleOrder = async (req: Request, res: Response) => {
     const userIdNumber = parseInt(userId, 10);
 
     const result = await Userservice.getOrderFromSingleDB(userIdNumber);
-    res.status(200).json({
-      data: result,
+   res.status(200).json({
+      success: true,
+      message: "Order fetched successfully!",
+      data: {
+        orders: result, // Wrap the orders in the "data" field
+      },
     });
   }catch (error: any) {
     res.status(500).json({
