@@ -67,6 +67,30 @@ const addNewOrderFromDB = async (id: number, orderData: TOrder) => {
 };
 
 
+const getOrderFromSingleDB = async (userId: number) => {
+  try {
+    if (await User.isUserExistsForUpdate(userId)) {
+      throw new Error("User not found");
+    }
+    
+    const user = await User.findOne({ userId });
+      if (!user) {
+        throw new Error('User not found');
+      }
+      const orders = user.orders || [];
+
+    return {
+      success: true,
+      message: "Order fetched successfully!",
+      data: orders,
+    };
+  } catch (error) {
+    throw new Error("User not found");
+  }
+};
+
+
+
 const calculateFromDB = async (userId: number) => {
     try {
         if (await User.isSingleUser(userId)) {
@@ -77,13 +101,17 @@ const calculateFromDB = async (userId: number) => {
         if (!user) {
             throw new Error('User not found');
         }
+        
         const orders = user.orders || [];
-        const totalPrice = orders.reduce((acc, order) => acc + (order.price || 0), 0);
+        
+        const totalPrice = orders.reduce((acc, order) => acc + (order.price || 0) * (order.quantity || 1), 0);
+
         const formattedTotalPrice = totalPrice.toFixed(2);
+
         return {
             success: true,
             message: 'Total price calculated successfully!',
-            data: { totalPrice : formattedTotalPrice },
+            data: { totalPrice: formattedTotalPrice },
         };
 
     } catch (error: any) {
@@ -95,8 +123,8 @@ const calculateFromDB = async (userId: number) => {
                 description: "User not found",
             },
         };
-    };
-}
+    }
+};
 
 const deleteUserFromDB = async (id: number) => {
      if ((await User.isSingleUserDelete(id))) {
@@ -117,4 +145,5 @@ export const Userservice = {
     updateUserFromDB,
     addNewOrderFromDB,
     calculateFromDB,
+    getOrderFromSingleDB,
 }

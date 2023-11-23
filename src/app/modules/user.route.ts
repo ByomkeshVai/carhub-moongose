@@ -11,6 +11,7 @@ router.delete('/users/:userId', UserController.deleteUser)
 
 
 router.put('/users/:userId/orders', UserController.addOrder)
+router.get('/users/:userId/orders', UserController.getSingleOrder)
 router.get('/users/:userId/orders/total-price', UserController.calculatePrice)
 
 

@@ -115,6 +115,27 @@ const addOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleOrder = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const userIdNumber = parseInt(userId, 10)
+
+        const result = await Userservice.getOrderFromSingleDB(userIdNumber)
+        res.status(200).json({
+            data: result,
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: "User not found",
+            error: {
+                code: 500,
+                description: 'User not found',
+            },
+        });
+    }
+}
+
 const calculatePrice = async (req: Request, res: Response) => { 
     try {
       const { userId } = req.params;
@@ -169,4 +190,5 @@ export const UserController = {
     updateUser,
     addOrder,
     calculatePrice,
+    getSingleOrder,
 };
