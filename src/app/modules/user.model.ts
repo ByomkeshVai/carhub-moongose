@@ -111,8 +111,14 @@ UserSchema.statics.isUserExists = async (id: number, username: string) => {
 
 // Static method to find a single user by ID
 UserSchema.statics.isSingleUser = async (id: number) => {
-  const singleUser = await User.findOne({ id });
+  const singleUser = await User.find({ id });
   return singleUser;
+};
+
+// Static method to update a user by ID
+UserSchema.statics.isUserExistsForUpdate = async (id: number) => {
+  const updateUser = await User.find({ id });
+  return updateUser;
 };
 
 // Static method to delete a user by ID

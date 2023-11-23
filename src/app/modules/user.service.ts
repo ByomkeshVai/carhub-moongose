@@ -24,6 +24,21 @@ const getSingleUserFromDB = async (id : number) => {
 
 };
 
+const updateUserFromDB = async (id: number, userData: TUser) => {
+  try {
+      if (await User.isUserExistsForUpdate(id)) {
+        throw new Error("User not found");
+    }  
+    const result = await User.findOneAndUpdate({ userId: id }, userData, {
+      new: true,
+      runValidators: true,
+    });
+    return result;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+};
+
 
 const deleteUserFromDB = async (id: number) => {
      if ((await User.isSingleUserDelete(id))) {
@@ -40,5 +55,6 @@ export const Userservice = {
     createUserDB,
     getAllUserFromDB,
     getSingleUserFromDB,
-    deleteUserFromDB
+    deleteUserFromDB,
+    updateUserFromDB,
 }

@@ -62,6 +62,26 @@ const getSingleUser = async (req: Request, res: Response) => {
     }
 }
 
+const updateUser = async (req: Request, res: Response) => {
+  try {
+      const userData = req.body;
+    const {userId}  = req.params;
+    const userIdNumber = parseInt(userId, 10);
+    const result = await Userservice.updateUserFromDB(userIdNumber, userData)
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User updated successfully',
+      data: result,
+    })
+  } catch (error: any) {
+    res.status(500).json({
+      status: 'fail',
+      message: error.message || 'something went wrong',
+    })
+  }
+}
+
 
 
 
@@ -99,4 +119,5 @@ export const UserController = {
     getAllUsers,
     getSingleUser,
     deleteUser,
+    updateUser,
 };
