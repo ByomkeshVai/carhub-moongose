@@ -96,9 +96,16 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-UserSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
+// UserSchema.post('save', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
+
+UserSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    delete ret.password;
+    return ret;
+  },
 });
 
 
@@ -111,13 +118,13 @@ UserSchema.statics.isUserExists = async (id: number, username: string) => {
 
 // Static method to find a single user by ID
 UserSchema.statics.isSingleUser = async (id: number) => {
-  const singleUser = await User.find({ id });
+  const singleUser = await User.findOne({ id });
   return singleUser;
 };
 
 // Static method to update a user by ID
 UserSchema.statics.isUserExistsForUpdate = async (id: number) => {
-  const updateUser = await User.find({ id });
+  const updateUser = await User.findOne({ id });
   return updateUser;
 };
 

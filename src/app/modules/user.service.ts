@@ -1,4 +1,4 @@
-import { TUser } from "./user.interface";
+import { TOrder, TUser } from "./user.interface";
 import { User } from "./user.model";
 
 const createUserDB = async (userData : TUser) => {
@@ -39,6 +39,64 @@ const updateUserFromDB = async (id: number, userData: TUser) => {
   }
 };
 
+const addNewOrderFromDB = async (id: number, orderData: TOrder) => {
+  try {
+    // Check if the user with the given ID exists
+    if (await User.isUserExistsForUpdate(id)) {
+      throw new Error("User not found");
+    }
+    const fetchedUser = await User.findOne({ userId: id });
+    if (!fetchedUser) {
+      throw new Error("User not found");
+    }
+    if (fetchedUser.orders) {
+      fetchedUser.orders.push(orderData);
+    } else {
+      fetchedUser.orders = [orderData];
+    }
+
+    await fetchedUser.save();
+    return {
+      success: true,
+      message: "Order created successfully!",
+      data: null,
+    };
+  } catch (error) {
+    throw new Error("User not found");
+  }
+};
+
+
+const calculateFromDB = async (userId: number) => {
+    try {
+        if (await User.isSingleUser(userId)) {
+            throw new Error("User not found");
+        }
+      
+        const user = await User.findOne({ userId });
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const orders = user.orders || [];
+        const totalPrice = orders.reduce((acc, order) => acc + (order.price || 0), 0);
+        const formattedTotalPrice = totalPrice.toFixed(2);
+        return {
+            success: true,
+            message: 'Total price calculated successfully!',
+            data: { totalPrice : formattedTotalPrice },
+        };
+
+    } catch (error: any) {
+        throw {
+            success: false,
+            message: error.description || 'Failed to calculate total price',
+            error: {
+                code: error.code || 500,
+                description: error.description || 'Internal Server Error',
+            },
+        };
+    };
+}
 
 const deleteUserFromDB = async (id: number) => {
      if ((await User.isSingleUserDelete(id))) {
@@ -57,4 +115,6 @@ export const Userservice = {
     getSingleUserFromDB,
     deleteUserFromDB,
     updateUserFromDB,
+    addNewOrderFromDB,
+    calculateFromDB,
 }

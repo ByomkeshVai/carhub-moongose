@@ -82,8 +82,48 @@ const updateUser = async (req: Request, res: Response) => {
   }
 }
 
+const addOrder = async (req: Request, res: Response) => {
+  try {
+    const orderData = req.body;
+    const { userId } = req.params;
+    const userIdNumber = parseInt(userId, 10);
+    await Userservice.addNewOrderFromDB(userIdNumber, orderData);
 
+    res.status(200).json({
+      status: 'success',
+      message: 'Order created successfully!',
+      data: null,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: 'fail',
+      message: error.message || 'Something went wrong',
+    });
+  }
+};
 
+const calculatePrice = async (req: Request, res: Response) => { 
+    try {
+      const { userId } = req.params;
+      const userIdNumber = parseInt(userId, 10);
+
+      // Get total price from the user service
+      const result = await Userservice.calculateFromDB(userIdNumber);
+
+      res.status(200).json({
+      data: result,
+    });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Something went wrong',
+        error: {
+          code: 500,
+          description: 'Internal Server Error',
+        },
+      });
+    }
+}
 
 const deleteUser = async (req: Request, res: Response) => {
     try {
@@ -120,4 +160,6 @@ export const UserController = {
     getSingleUser,
     deleteUser,
     updateUser,
+    addOrder,
+    calculatePrice,
 };
