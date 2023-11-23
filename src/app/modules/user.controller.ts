@@ -16,11 +16,7 @@ const createUser = async (req: Request, res: Response) => {
     } catch (error: any) {
        res.status(500).json({
         success: false,
-        message: "User not found",
-        error: {
-          code: 500,
-          description: 'User not found',
-        },
+        message: error.message,
       });
     }
 }
