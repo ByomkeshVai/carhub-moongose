@@ -89,10 +89,10 @@ const calculateFromDB = async (userId: number) => {
     } catch (error: any) {
         throw {
             success: false,
-            message: error.description || 'Failed to calculate total price',
+            message: 'User not found',
             error: {
-                code: error.code || 500,
-                description: error.description || 'Internal Server Error',
+                code: 500,
+                description: "User not found",
             },
         };
     };

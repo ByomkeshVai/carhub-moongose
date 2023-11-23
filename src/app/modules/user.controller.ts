@@ -14,11 +14,14 @@ const createUser = async (req: Request, res: Response) => {
         data: result,
         });
     } catch (error: any) {
-        res.status(500).json({
+       res.status(500).json({
         success: false,
-        message: error.message || 'something went wrong',
-        error: error,
-        });
+        message: "User not found",
+        error: {
+          code: 500,
+          description: 'User not found',
+        },
+      });
     }
 }
 
@@ -33,11 +36,14 @@ const getAllUsers = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: 'User not found',
-      error: err,
-    });
+   res.status(500).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 500,
+          description: 'User not found',
+        },
+      });
   }
 };
 
@@ -54,11 +60,14 @@ const getSingleUser = async (req: Request, res: Response) => {
         });
       
     } catch (err: any) {
-        res.status(500).json({
-            success: false,
-            message: 'User not found',
-            error: err,
-        });
+       res.status(500).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 500,
+          description: 'User not found',
+        },
+      });
     }
 }
 
@@ -76,9 +85,13 @@ const updateUser = async (req: Request, res: Response) => {
     })
   } catch (error: any) {
     res.status(500).json({
-      status: 'fail',
-      message: error.message || 'something went wrong',
-    })
+        success: false,
+        message: "User not found",
+        error: {
+          code: 500,
+          description: 'User not found',
+        },
+      });
   }
 }
 
@@ -96,9 +109,13 @@ const addOrder = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
-    });
+        success: false,
+        message: "User not found",
+        error: {
+          code: 500,
+          description: 'User not found',
+        },
+      });
   }
 };
 
@@ -107,7 +124,6 @@ const calculatePrice = async (req: Request, res: Response) => {
       const { userId } = req.params;
       const userIdNumber = parseInt(userId, 10);
 
-      // Get total price from the user service
       const result = await Userservice.calculateFromDB(userIdNumber);
 
       res.status(200).json({
@@ -116,10 +132,10 @@ const calculatePrice = async (req: Request, res: Response) => {
     } catch (error: any) {
       res.status(500).json({
         success: false,
-        message: error.message || 'Something went wrong',
+        message: "User not found",
         error: {
           code: 500,
-          description: 'Internal Server Error',
+          description: 'User not found',
         },
       });
     }
@@ -137,19 +153,14 @@ const deleteUser = async (req: Request, res: Response) => {
             data: null,
         });
     } catch (err: any) {
-        if (err.message === 'User not found') {
-            res.status(404).json({
-                success: false,
-                message: 'User not found',
-                error: null,
-            });
-        } else {
-            res.status(500).json({
-                success: false,
-                message: 'Something went wrong',
-                error: err,
-            });
-        }
+        res.status(500).json({
+        success: false,
+        message: "User not found",
+        error: {
+          code: 500,
+          description: 'User not found',
+        },
+      });
     }
 };
 
