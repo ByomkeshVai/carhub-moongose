@@ -23,6 +23,7 @@ npm install
 ```
 
 ## For Start The CarHub
-First Build the Project with command "npm run build"
-For Run Wih Nodemon with command "npm run start:prod"
-For Run Wih Final Out Put with command "start:dev"
+```
+- First Build the Project with command "npm run build"
+- For Run Wih Nodemon with command "npm run start:prod"
+- For Run Wih Final Out Put with command "start:dev" ```
