@@ -8,6 +8,10 @@
   - [Installation](#installation)
   - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
+  - [Development Mode](#development-mode)
+  - [Production Mode](#production-mode)
+- [Linting and Formatting](#linting-and-formatting)
+- [Testing](#testing)
 
 ## Introduction
 CarHub is a project built with Express and Mongoose to manage car-related information.
@@ -30,9 +34,40 @@ git clone <repository-url>
 cd carHub
 npm install
 ```
+## Configuration
+- PORT=5000
+- DATABASE_URL - "Your MongoDB database"
+- BCRYPT_SALT_ROUNDS= "Any Number"
 
 ## Running the Application
+
+## Development Mode
+```npm run start:dev
+The server will be running at http://localhost:5000
 ```
-- First Build the Project with command "npm run build"
-- For Run Wih Nodemon with command "npm run start:prod"
-- For Run Wih Final Out Put with command "start:dev" ```
+
+## Production Mode
+```npm run build
+npm start:prod
+```
+
+
+## Linting and Formatting
+
+```
+Lint the code: npm run lint
+```
+```
+fix litting issues: npm run lint:fix
+```
+
+## Format your code:
+```
+npm run prettier
+```
+
+
+## Testing
+```
+npm run test
+```
