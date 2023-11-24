@@ -128,28 +128,30 @@ UserSchema.set('toJSON', {
 
 
 // Static method to check if a user exists by ID or username
-UserSchema.statics.isUserExists = async (id: number, username: string) => {
-  const existingUser = await User.findOne({ $or: [{ id }, { username }] });
+UserSchema.statics.isUserExists = async (userId: number, username: string) => {
+  const existingUser = await User.findOne({ $or: [{ userId }, { username }] });
   return existingUser;
 };
 
 // Static method to find a single user by ID
 UserSchema.statics.isSingleUser = async (id: number) => {
-  const singleUser = await User.findOne({ id });
+  const singleUser = await User.findOne({ userId: id });
   return singleUser;
 };
 
+
 // Static method to update a user by ID
 UserSchema.statics.isUserExistsForUpdate = async (id: number) => {
-  const updateUser = await User.findOne({ id });
+  const updateUser = await User.findOne({ userId: id });
   return updateUser;
 };
 
 // Static method to delete a user by ID
 UserSchema.statics.isSingleUserDelete = async (id: number) => {
-  const deletedUser = await User.findOne({ id });
+  const deletedUser = User.findOne({ userId: id });
   return deletedUser;
 };
+
 
 
 

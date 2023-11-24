@@ -26,18 +26,20 @@ const getAllUserFromDB = async () => {
   }
 };
 
+
 const getSingleUserFromDB = async (id: number) => {
   try {
-    if (await User.isSingleUser(id)) {
+    const userExists = await User.isSingleUser(id);
+    if (!userExists) {
       throw new Error("User not found");
     }
+    
     const result = await User.findOne({ userId: id });
     if (!result) {
       throw new Error("User not found");
     }
-    return {
-      data: result,
-    };
+    
+    return result;
   } catch (error: any) {
     throw new Error(error.message || "Failed to fetch user");
   }
@@ -45,7 +47,8 @@ const getSingleUserFromDB = async (id: number) => {
 
 const updateUserFromDB = async (id: number, userData: TUser) => {
   try {
-    if (await User.isUserExistsForUpdate(id)) {
+    const userExists = await User.isUserExistsForUpdate(id);
+    if (!userExists) {
       throw new Error("User not found");
     }
     const result = await User.findOneAndUpdate({ userId: id }, userData, {
@@ -65,10 +68,11 @@ const updateUserFromDB = async (id: number, userData: TUser) => {
 
 const addNewOrderFromDB = async (id: number, orderData: TOrder) => {
   try {
-    // Check if the user with the given ID exists
-    if (await User.isUserExistsForUpdate(id)) {
+     const userExists = await User.isUserExistsForUpdate(id);
+    if (!userExists) {
       throw new Error("User not found");
     }
+    
     const fetchedUser = await User.findOne({ userId: id });
     if (!fetchedUser) {
       throw new Error("User not found");
@@ -90,7 +94,8 @@ const addNewOrderFromDB = async (id: number, orderData: TOrder) => {
 
 const getOrderFromSingleDB = async (userId: number) => {
   try {
-    if (await User.isUserExistsForUpdate(userId)) {
+   const userExists = await User.isUserExistsForUpdate(userId);
+    if (!userExists) {
       throw new Error("User not found");
     }
 
@@ -108,7 +113,8 @@ const getOrderFromSingleDB = async (userId: number) => {
 
 const calculateFromDB = async (userId: number) => {
   try {
-    if (await User.isSingleUser(userId)) {
+    const userExists = await User.isSingleUser(userId);
+    if (!userExists) {
       throw new Error("User not found");
     }
 
@@ -127,7 +133,7 @@ const calculateFromDB = async (userId: number) => {
     const formattedTotalPrice = totalPrice.toFixed(2);
 
     return {
-      data: { totalPrice: formattedTotalPrice },
+      totalPrice: formattedTotalPrice ,
     };
   } catch (error: any) {
     throw new Error(error.message || "Failed to calculate total price");
@@ -136,13 +142,15 @@ const calculateFromDB = async (userId: number) => {
 
 const deleteUserFromDB = async (id: number) => {
   try {
-    if ((await User.isSingleUserDelete(id))) {
+    const userExists = await User.isSingleUserDelete(id);
+    if (!userExists) {
       throw new Error("User not found");
     }
+
     const result = await User.deleteOne({ userId: id });
-    if (result.deletedCount === 0) {
-      throw new Error("User not found");
-    }
+    // if (result.deletedCount === 0) {
+    //   throw new Error("User not found");
+    // }
     return {
       data: result,
     };

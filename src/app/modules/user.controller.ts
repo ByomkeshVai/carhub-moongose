@@ -40,7 +40,7 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: 'User not found',
+        description: error.message ||'User not found',
       },
     });
   }
@@ -49,8 +49,8 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const userIdNumber = parseInt(userId, 10);
-    const result = await Userservice.getSingleUserFromDB(userIdNumber);
+    
+    const result = await Userservice.getSingleUserFromDB(Number(userId));
 
     res.status(200).json({
       success: true,
@@ -58,15 +58,15 @@ const getSingleUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: 'User not found',
-      error: {
-        code: 404,
-        description: 'User not found',
-      },
-    });
-  }
+  res.status(500).json({
+    success: false,
+    message: 'User not found',
+    error: {
+      code: 404,
+      description: error.message || 'User not found',
+    },
+  });
+}
 };
 
 const updateUser = async (req: Request, res: Response) => {
@@ -84,10 +84,10 @@ const updateUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'User not found',
+      message: error.message || 'User not found',
       error: {
         code: 404,
-        description: 'User not found',
+        description: error.message || 'User not found',
       },
     });
   }
@@ -97,8 +97,7 @@ const addOrder = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
     const { userId } = req.params;
-    const userIdNumber = parseInt(userId, 10);
-    await Userservice.addNewOrderFromDB(userIdNumber, orderData);
+    await Userservice.addNewOrderFromDB(Number(userId), orderData);
 
     res.status(200).json({
       success: true,
@@ -111,7 +110,7 @@ const addOrder = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: 'User not found',
+        description: error.message || 'User not found',
       },
     });
   }
@@ -120,9 +119,9 @@ const addOrder = async (req: Request, res: Response) => {
 const getSingleOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const userIdNumber = parseInt(userId, 10);
+    // const userIdNumber = parseInt(userId, 10);
 
-    const result = await Userservice.getOrderFromSingleDB(userIdNumber);
+    const result = await Userservice.getOrderFromSingleDB(Number(userId));
    res.status(200).json({
       success: true,
       message: "Order fetched successfully!",
@@ -136,7 +135,7 @@ const getSingleOrder = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: 'User not found',
+        description: error.message || 'User not found',
       },
     });
   }
@@ -145,10 +144,11 @@ const getSingleOrder = async (req: Request, res: Response) => {
 const calculatePrice = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const userIdNumber = parseInt(userId, 10);
-    const result = await Userservice.calculateFromDB(userIdNumber);
+    const result = await Userservice.calculateFromDB(Number(userId));
 
     res.status(200).json({
+      success: true,
+      message: "Total price calculated successfully!",
       data: result,
     });
   } catch (error: any) {
@@ -157,7 +157,7 @@ const calculatePrice = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: 'User not found',
+        description: error.message || 'User not found',
       },
     });
   }
@@ -166,8 +166,7 @@ const calculatePrice = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const userIdNumber = parseInt(userId, 10);
-    await Userservice.deleteUserFromDB(userIdNumber);
+    await Userservice.deleteUserFromDB(Number(userId));
 
     res.status(200).json({
       success: true,
@@ -180,7 +179,7 @@ const deleteUser = async (req: Request, res: Response) => {
       message: 'User not found',
       error: {
         code: 404,
-        description: 'User not found',
+        description: error.message || 'User not found',
       },
     });
   }
