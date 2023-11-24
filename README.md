@@ -8,12 +8,6 @@
   - [Installation](#installation)
   - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
-  - [Development Mode](#development-mode)
-  - [Production Mode](#production-mode)
-- [Linting and Formatting](#linting-and-formatting)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 CarHub is a project built with Express and Mongoose to manage car-related information.
@@ -37,7 +31,7 @@ cd carHub
 npm install
 ```
 
-## For Start The CarHub
+## Running the Application
 ```
 - First Build the Project with command "npm run build"
 - For Run Wih Nodemon with command "npm run start:prod"
