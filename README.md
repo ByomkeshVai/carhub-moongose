@@ -1,5 +1,20 @@
 # CarHub - Express and Mongoose Project
 
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+- [Running the Application](#running-the-application)
+  - [Development Mode](#development-mode)
+  - [Production Mode](#production-mode)
+- [Linting and Formatting](#linting-and-formatting)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Introduction
 CarHub is a project built with Express and Mongoose to manage car-related information.
 
