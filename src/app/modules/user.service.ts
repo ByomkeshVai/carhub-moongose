@@ -148,9 +148,6 @@ const deleteUserFromDB = async (id: number) => {
     }
 
     const result = await User.deleteOne({ userId: id });
-    // if (result.deletedCount === 0) {
-    //   throw new Error("User not found");
-    // }
     return {
       data: result,
     };
