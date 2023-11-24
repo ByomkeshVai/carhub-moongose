@@ -41,12 +41,12 @@ npm install
 
 ## Running the Application
 
-## Development Mode
+### Development Mode
 ```npm run start:dev
 The server will be running at http://localhost:5000
 ```
 
-## Production Mode
+### Production Mode
 ```npm run build
 npm start:prod
 ```
