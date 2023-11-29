@@ -1,15 +1,16 @@
+import config from "../config";
 import { TOrder, TUser } from "./user.interface";
 import { User } from "./user.model";
+import bcrypt from 'bcrypt';
 
 const createUserDB = async (userData: TUser) => {
   try {
     if (await User.isUserExists(userData.userId, userData.username)) {
       throw new Error("User Already Exists");
     }
+
     const result = await User.create(userData);
-    return {
-      data: result,
-    };
+    return result
   } catch (error: any) {
     throw new Error(error.message || "Failed to create user");
   }
@@ -17,10 +18,19 @@ const createUserDB = async (userData: TUser) => {
 
 const getAllUserFromDB = async () => {
   try {
-    const result = await User.find();
-    return {
-      data: result,
-    };
+
+     const projection = {
+      username: 1,
+      fullName: 1,
+      age: 1,
+      email: 1,
+      address: 1,
+      _id: 0, 
+     };
+    
+    const result = await User.find({}, projection);
+    return result;
+
   } catch (error: any) {
     throw new Error(error.message || "Failed to fetch users");
   }
@@ -33,6 +43,7 @@ const getSingleUserFromDB = async (id: number) => {
     if (!userExists) {
       throw new Error("User not found");
     }
+
     
     const result = await User.findOne({ userId: id });
     if (!result) {
@@ -45,12 +56,21 @@ const getSingleUserFromDB = async (id: number) => {
   }
 };
 
-const updateUserFromDB = async (id: number, userData: TUser) => {
+const updateUserFromDB = async (id: number, userData: Partial<TUser>) => {
   try {
     const userExists = await User.isUserExistsForUpdate(id);
     if (!userExists) {
       throw new Error("User not found");
     }
+
+     if (userData.password) {
+      // Hash the new password
+      userData.password = await bcrypt.hash(
+        userData.password,
+        Number(config.bcrypt_salt_rounds),
+      );
+     }
+    
     const result = await User.findOneAndUpdate({ userId: id }, userData, {
       new: true,
       runValidators: true,
@@ -58,9 +78,7 @@ const updateUserFromDB = async (id: number, userData: TUser) => {
     if (!result) {
       throw new Error("User not found");
     }
-    return {
-      data: result,
-    };
+    return result
   } catch (error: any) {
     throw new Error(error.message || "Failed to update user");
   }

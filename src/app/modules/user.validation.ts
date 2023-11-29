@@ -34,6 +34,23 @@ export const UserSchema = z.object({
   orders: z.array(OrderSchema).optional(),
 });
 
+// Define Zod validation schema for User
+export const UpdateUserSchema = z.object({
+  userId: z.number().optional(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  fullName: FullNameSchema.optional(),
+  age: z.number().optional(),
+  email: z.string().email().optional(),
+  isActive: z.boolean().optional(),
+  hobbies: z.array(z.string()).optional(),
+  address: AddressSchema.optional(),
+  orders: z.array(OrderSchema).optional().optional(),
+});
 
 
-export default UserSchema;
+
+export const userValidation = {
+  UserSchema,
+  UpdateUserSchema,
+};

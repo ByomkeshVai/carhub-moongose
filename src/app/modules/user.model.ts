@@ -90,8 +90,6 @@ const UserSchema = new Schema<TUser, UserModel>({
 });
 
 
-
-
 // bcrypting the password field
 UserSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -102,6 +100,9 @@ UserSchema.pre('save', async function (next) {
   );
   next();
 });
+
+
+
 
 UserSchema.set('toJSON', {
   virtuals: true,

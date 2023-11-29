@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import UserSchema from './user.validation';
+import { userValidation } from './user.validation';
 import { Userservice } from './user.service';
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
-    const zodParseData = UserSchema.parse(user);
+    const zodParseData = userValidation.UserSchema.parse(user);
     const result = await Userservice.createUserDB(zodParseData);
 
     res.status(200).json({
@@ -14,12 +14,12 @@ const createUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: 'User Already Exists',
+      message: error.message,
       error: {
         code: 404,
-        description: 'User Already Exists',
+        description: error.message,
       },
     });
   }
@@ -35,7 +35,7 @@ const getAllUsers = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
@@ -58,7 +58,7 @@ const getSingleUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-  res.status(500).json({
+  res.status(404).json({
     success: false,
     message: 'User not found',
     error: {
@@ -73,8 +73,10 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
     const { userId } = req.params;
+    const zodParseData = userValidation.UpdateUserSchema.parse(userData);
+
     const userIdNumber = parseInt(userId, 10);
-    const result = await Userservice.updateUserFromDB(userIdNumber, userData);
+    const result = await Userservice.updateUserFromDB(userIdNumber, zodParseData);
 
     res.status(200).json({
       success: true,
@@ -82,7 +84,7 @@ const updateUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: error.message || 'User not found',
       error: {
@@ -105,7 +107,7 @@ const addOrder = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
@@ -130,7 +132,7 @@ const getSingleOrder = async (req: Request, res: Response) => {
       },
     });
   }catch (error: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
@@ -152,7 +154,7 @@ const calculatePrice = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
@@ -174,7 +176,7 @@ const deleteUser = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: 'User not found',
       error: {
